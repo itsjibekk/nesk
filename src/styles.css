@@ -1,1 +1,54 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f5f7;
+}
+
+.app-header {
+  background-color: #2563eb;
+  color: white;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-logo {
+  height: 40px;
+  margin-right: 16px;
+}
+
+.app-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+button {
+  background-color: #2563eb;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #1e40af;
+}
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.component-container {
+  height: 100vh; /* или 100%, если родитель корректен */
+  display: flex;
+  flex-direction: column;
+}
+
+.component-view {
+  flex-grow: 1;
+  height: 100%;
+}

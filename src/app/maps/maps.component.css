@@ -1,0 +1,142 @@
+.map {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin: 0;
+}
+
+
+.map-controls {
+  padding: 1rem;
+  background: #f5f5f5;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.controls-container {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.base-map-select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.layers-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dropdown-toggle:hover {
+  background: #f8f8f8;
+}
+
+.arrow {
+  font-size: 0.8em;
+  color: #666;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  min-width: 200px;
+  z-index: 1000;
+}
+
+.layers-dropdown:hover .dropdown-menu {
+  display: block;
+}
+.layers-dropdown:hover .arrow {
+  transform: rotate(180deg);
+  transition: transform 0.2s;
+}
+
+.layer-list {
+  padding: 8px;
+}
+
+.layer-item {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-radius: 4px;
+}
+
+.layer-item:hover {
+  background: #f8f8f8;
+}
+
+.layer-name {
+  margin-left: 8px;
+  font-size: 14px;
+}
+
+/* Кастомные чекбоксы */
+input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: relative;
+  height: 16px;
+  width: 16px;
+  background-color: #fff;
+  border: 2px solid #666;
+  border-radius: 3px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+input:checked ~ .checkmark {
+  background-color: #2196F3;
+  border-color: #2196F3;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+input:checked ~ .checkmark:after {
+  display: block;
+}

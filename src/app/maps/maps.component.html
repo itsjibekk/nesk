@@ -1,0 +1,39 @@
+<div class="map-controls">
+  <div class="controls-container">
+    <select class="base-map-select" (change)="onMapSelect($event)">
+      <option value="osm">OpenStreetMap</option>
+      <option value="google">Google Maps</option>
+      <option value="yandex">Yandex Maps</option>
+      <option value="2gis">2GIS</option>
+    </select>
+
+    <div class="layers-dropdown">
+      <button class="dropdown-toggle">
+        <span>🌍 Слои</span>
+        <span class="arrow">▼</span>
+      </button>
+      <div class="dropdown-menu">
+        <div class="layer-list">
+          <label class="layer-item">
+            <input type="checkbox"
+                   [checked]="layerVisibility['geoserver1']"
+                   (change)="onLayerToggle('geoserver1')">
+            <span class="checkmark"></span>
+            <span class="layer-name">Poles</span>
+          </label>
+          <label class="layer-item">
+            <input type="checkbox"
+                   [checked]="layerVisibility['geoserver2']"
+                   (change)="onLayerToggle('geoserver2')">
+            <span class="checkmark"></span>
+            <span class="layer-name">Roads</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #mapContainer class="map"></div>
+
+

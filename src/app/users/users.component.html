@@ -1,0 +1,46 @@
+<div class="container" style="display: flex; min-height: 100vh; font-family: Arial, sans-serif;">
+
+  <!-- Main Content -->
+  <main style="flex: 1; padding: 30px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+      <h2>Manage Users</h2>
+      <button style="background-color: #0d6efd; color: white; padding: 10px 20px; border: none; border-radius: 4px;">+ Add User</button>
+    </div>
+
+    <!-- Search -->
+    <div style="margin-bottom: 20px;">
+      <input [(ngModel)]="searchQuery" type="text" placeholder="Search Users" style="padding: 8px 12px; width: 100%; max-width: 300px; border: 1px solid #ccc; border-radius: 4px;">
+    </div>
+
+    <!-- User Table -->
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+      <tr style="text-align: left; border-bottom: 2px solid #ccc;">
+        <th style="padding: 12px;">Name</th>
+        <th>Role</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Created On</th>
+        <th>Last Seen</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let user of users " style="border-bottom: 1px solid #eee;">
+        <td style="padding: 12px;">
+          <a href="#" style="color: #3f51b5; text-decoration: none;">{{ user.name }}</a>
+        </td>
+        <td>{{ user.role }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+          <span style="background-color: #e0f7fa; color: #00bcd4; padding: 4px 10px; border-radius: 12px;">{{ user.status }}</span>
+        </td>
+        <td>{{ user.createdOn }}</td>
+        <td style="text-align: right;">
+          🔒 👥 🗑️
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </main>
+</div>
