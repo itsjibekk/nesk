@@ -1,0 +1,18 @@
+<app-header
+  [isLoggedIn]="isLoggedIn"
+  (loginEvent)="showComponent('login')"
+  (logoutEvent)="onLogout()"
+  (mapsEvent)="showComponent('maps')"
+  (manageUsersEvent)="showComponent('users')"
+/>
+<div class="component-container">
+  <app-welcome-content *ngIf="componentToShow === 'welcome'" class="component-view" />
+  <app-login-form
+    *ngIf="componentToShow === 'login'"
+    (onSubmitLoginEvent)="onLogin($event)"
+    (onSubmitRegisterEvent)="onRegister($event)"
+    class="component-view"
+  />
+  <app-maps *ngIf="componentToShow === 'maps'" class="component-view" />
+  <app-users *ngIf="componentToShow === 'users'" class="component-view"/>
+</div>

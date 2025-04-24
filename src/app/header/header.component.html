@@ -1,0 +1,16 @@
+<header class="app-header">
+  <h1 class="app-title">{{ pageTitle || 'NESK' }}</h1>
+
+  <!-- You can add logo here if needed -->
+  <img *ngIf="logoSrc" [ngSrc]="logoSrc" width="50" height="50" alt="Logo" />
+
+  <!-- Add buttons directly to header -->
+  <app-buttons
+    [isLoggedIn]="isLoggedIn"
+    (loginEvent)="onLoginClicked()"
+    (logoutEvent)="onLogoutClicked()"
+    (mapsEvent)="onMapsClicked()"
+    (manageUsersEvent)="onManageUsersClicked()"
+  />
+
+</header>

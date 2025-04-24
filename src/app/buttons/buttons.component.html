@@ -1,0 +1,6 @@
+<div class="d-flex justify-content-center align-items-center mt-3 flex-wrap">
+  <button *ngIf="!isLoggedIn" class="btn btn-primary m-2" (click)="loginEvent.emit()">Login</button>
+  <button *ngIf="isLoggedIn" class="btn btn-primary m-2" (click)="logoutEvent.emit()">Logout</button>
+  <button *ngIf="isLoggedIn" class="btn btn-primary m-2" (click)="showMaps()">Maps</button>
+  <button *ngIf="isLoggedIn" class="btn btn-primary m-2" (click)="onManageUsersClicked()">Manage Users</button>
+</div>
