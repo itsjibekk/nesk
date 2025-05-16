@@ -13,6 +13,7 @@ export class HeaderComponent {
   @Input() pageTitle!: string;
   @Input() logoSrc!: string;
   @Input() isLoggedIn: boolean = false;
+  @Input() userRole: string = '';
 
   @Output() loginEvent = new EventEmitter<void>();
   @Output() logoutEvent = new EventEmitter<void>();
@@ -33,5 +34,7 @@ export class HeaderComponent {
   onManageUsersClicked(){
     this.manageUsersEvent.emit();
   }
+
+
 }
 

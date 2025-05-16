@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {WelcomeContentComponent} from '../welcome-content/welcome-content.component';
 import {LoginFormComponent} from '../login-form/login-form.component';
-import {AxiosService} from '../axios.service';
+import {AxiosService} from '../service/axios/axios.service';
 import {ButtonsComponent} from '../buttons/buttons.component';
 import {AuthContentComponent} from '../auth-content/auth-content.component';
 import {NgIf} from '@angular/common';
@@ -28,6 +28,7 @@ import {UsersComponent} from '../users/users.component';
 export class ContentComponent {
   componentToShow: string = "welcome";
   isLoggedIn: boolean = false;
+  userRole: string = '';
 
   constructor(private axiosService: AxiosService) {
   }
@@ -47,6 +48,8 @@ export class ContentComponent {
        this.axiosService.setAuthToken(response.data.token);
        this.isLoggedIn = true;
        this.componentToShow = "maps";
+       const roles = response.data.roles?.map((role: any) => role.name) || [];
+       this.userRole = roles.includes('admin') ? 'admin' : 'user';
      });
   }
 
@@ -65,12 +68,14 @@ export class ContentComponent {
       this.axiosService.setAuthToken(response.data.token);
       this.isLoggedIn = true;
       this.componentToShow = "maps";
+
     });
   }
   onLogout(): void {
-    this.axiosService.setAuthToken(null); // Clears the token
+    this.axiosService.setAuthToken(null);
     this.isLoggedIn = false;
     this.componentToShow = 'welcome';
   }
+
 
 }

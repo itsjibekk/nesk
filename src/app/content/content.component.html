@@ -1,9 +1,11 @@
 <app-header
   [isLoggedIn]="isLoggedIn"
+  [userRole]="userRole"
   (loginEvent)="showComponent('login')"
   (logoutEvent)="onLogout()"
   (mapsEvent)="showComponent('maps')"
   (manageUsersEvent)="showComponent('users')"
+
 />
 <div class="component-container">
   <app-welcome-content *ngIf="componentToShow === 'welcome'" class="component-view" />

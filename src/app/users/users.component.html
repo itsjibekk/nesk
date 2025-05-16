@@ -1,10 +1,17 @@
 <div class="container" style="display: flex; min-height: 100vh; font-family: Arial, sans-serif;">
 
   <!-- Main Content -->
+
   <main style="flex: 1; padding: 30px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
       <h2>Manage Users</h2>
-      <button style="background-color: #0d6efd; color: white; padding: 10px 20px; border: none; border-radius: 4px;">+ Add User</button>
+      <button
+        style="background-color: #0d6efd; color: white; padding: 10px 20px; border: none; border-radius: 10px;"
+        (click)="onAddUser()"
+      >
+        + Add User
+      </button>
+
     </div>
 
     <!-- Search -->
@@ -16,31 +23,124 @@
     <table style="width: 100%; border-collapse: collapse;">
       <thead>
       <tr style="text-align: left; border-bottom: 2px solid #ccc;">
-        <th style="padding: 12px;">Name</th>
-        <th>Role</th>
-        <th>Email</th>
+        <th style="padding: 12px;">Login</th>
+        <th>Last Name</th>
+        <th>First Name</th>
         <th>Status</th>
+        <th>Role</th>
         <th>Created On</th>
-        <th>Last Seen</th>
-        <th></th>
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let user of users " style="border-bottom: 1px solid #eee;">
-        <td style="padding: 12px;">
-          <a href="#" style="color: #3f51b5; text-decoration: none;">{{ user.name }}</a>
+      <tr *ngIf="filteredUsers.length === 0">
+        <td colspan="6" style="text-align: center; padding: 20px;">
+          No users found
         </td>
-        <td>{{ user.role }}</td>
-        <td>{{ user.email }}</td>
+      </tr>
+      <tr *ngFor="let user of filteredUsers " style="border-bottom: 1px solid #eee;">
+        <td style="padding: 12px;">
+          <a href="#" style="color: #3f51b5; text-decoration: none;">{{ user.login }}</a>
+        </td>
+        <td>{{ user.lastName  }}</td>
+        <td>{{ user.firstName }}</td>
         <td>
           <span style="background-color: #e0f7fa; color: #00bcd4; padding: 4px 10px; border-radius: 12px;">{{ user.status }}</span>
         </td>
-        <td>{{ user.createdOn }}</td>
-        <td style="text-align: right;">
-          🔒 👥 🗑️
+        <td>{{ getRoleNames(user) }}</td>
+        <td>{{ user.createdOn ? (user.createdOn | date: 'yyyy-MM-dd HH:mm') : '' }}</td>
+        <td>
+          <button style="background-color: #7bb665; color: white; padding: 5px 10px; border: none; border-radius: 10px;" (click)="onEdit(user)">Edit</button>
+          <button style="background-color: #fc9341; color: white; padding: 5px 10px; border: none; border-radius: 10px;" (click)="onDelete(user)">Delete</button>
         </td>
       </tr>
       </tbody>
     </table>
+    <!-- Roles dropdown -->
+
+    <!-- Modal Form -->
+    <div *ngIf="isModalOpen"
+         (click)="closeModal()"
+         style="
+       position: fixed;
+       top: 0; left: 0;
+       width: 100vw; height: 100vh;
+       background-color: rgba(0, 0, 0, 0.3);
+       backdrop-filter: blur(5px);
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       z-index: 1000;
+       animation: fadeIn 0.3s ease-out;
+     ">
+
+      <!-- Modal Content -->
+      <div (click)="$event.stopPropagation()"
+           style="
+         background-color: #fff;
+         padding: 30px;
+         border-radius: 16px;
+         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+         width: 100%;
+         max-width: 400px;
+         font-family: Arial, sans-serif;
+         animation: slideIn 0.3s ease-out;
+       ">
+        <h3 style="margin-top: 0; margin-bottom: 20px;">{{ isEditing ? 'Edit User' : 'Add User' }}</h3>
+
+        <form (ngSubmit)="onSaveUser()" style="display: flex; flex-direction: column; gap: 12px;">
+          <input [(ngModel)]="selectedUser.login" name="login" placeholder="Login" required style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+          <input [(ngModel)]="selectedUser.firstName" name="firstName" placeholder="First Name" required style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+          <input [(ngModel)]="selectedUser.lastName" name="lastName" placeholder="Last Name" required style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+          <input [(ngModel)]="selectedUser.status" name="status" placeholder="Status" required style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+          <input [(ngModel)]="selectedUser.password"
+                 name="password"
+                 placeholder="Password"
+                 type="password"
+                 required
+                 style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+          <!-- Role Dropdown -->
+          <!-- Multiple Role Select -->
+          <!-- Display current roles as chips -->
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
+  <span *ngFor="let role of selectedUser.roles"
+        style="background-color: #e0f7fa; color: #007b83; padding: 6px 12px; border-radius: 20px; display: flex; align-items: center;">
+    {{ role.name }}
+    <button type="button" (click)="removeRole(role)" style="background: none; border: none; margin-left: 8px; color: #007b83; font-weight: bold; cursor: pointer;">×</button>
+  </span>
+          </div>
+
+          <!-- Dropdown to add new roles -->
+          <select (change)="addRole($event)" style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+            <option value="">Add Role</option>
+            <option *ngFor="let role of availableRoles"
+                    [value]="role.id"
+                    [disabled]="hasUserRole(role.id)">
+              {{ role.name }}
+            </option>
+          </select>
+
+          <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+            <button type="submit" style="background-color: #0d6efd; color: white; padding: 10px 20px; border: none; border-radius: 8px;">{{ isEditing ? 'Update' : 'Create' }}</button>
+            <button type="button" (click)="closeModal()" style="background-color: #ccc; padding: 10px 20px; border: none; border-radius: 8px;">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Animations -->
+    <style>
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      @keyframes slideIn {
+        from { transform: translateY(-20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+    </style>
+
+
+
   </main>
 </div>

@@ -13,11 +13,14 @@ import {NgIf} from '@angular/common';
 // buttons.component.ts
 export class ButtonsComponent {
   @Input() isLoggedIn: boolean = false;
+  @Input() userRole: string = '';
 
   @Output() loginEvent = new EventEmitter();
   @Output() logoutEvent = new EventEmitter();
   @Output() mapsEvent = new EventEmitter(); // Add this
   @Output() manageUsersEvent = new EventEmitter(); // Add this
+
+
 
   // Add this method
   showMaps(): void {
@@ -26,4 +29,6 @@ export class ButtonsComponent {
   onManageUsersClicked(){
     this.manageUsersEvent.emit();
   }
+
+
 }

@@ -1,6 +1,6 @@
-<div class="map-controls">
+<div class="map-controls" xmlns:margin-left="http://www.w3.org/1999/xhtml">
   <div class="controls-container">
-    <select class="base-map-select" (change)="onMapSelect($event)">
+    <select class="dropdown-toggle" (change)="onMapSelect($event)">
       <option value="osm">OpenStreetMap</option>
       <option value="google">Google Maps</option>
       <option value="yandex">Yandex Maps</option>
@@ -26,13 +26,70 @@
                    [checked]="layerVisibility['geoserver2']"
                    (change)="onLayerToggle('geoserver2')">
             <span class="checkmark"></span>
-            <span class="layer-name">Roads</span>
+            <span class="layer-name">Transformers</span>
+          </label>
+          <label class="layer-item">
+            <input type="checkbox"
+                   [checked]="layerVisibility['geoserver3']"
+                   (change)="onLayerToggle('geoserver3')">
+            <span class="checkmark"></span>
+            <span class="layer-name">States</span>
+          </label>
+          <label class="layer-item">
+            <input type="checkbox"
+                   [checked]="layerVisibility['geoserver4']"
+                   (change)="onLayerToggle('geoserver4')">
+            <span class="checkmark"></span>
+            <span class="layer-name">Sample Arc</span>
+          </label>
+          <label class="layer-item">
+            <input type="checkbox"
+                   [checked]="layerVisibility['geoserver5']"
+                   (change)="onLayerToggle('geoserver5')">
+            <span class="checkmark"></span>
+            <span class="layer-name">Tiger roads</span>
+          </label>
+          <label class="layer-item">
+            <input type="checkbox"
+                   [checked]="layerVisibility['geoserver6']"
+                   (change)="onLayerToggle('geoserver6')">
+            <span class="checkmark"></span>
+            <span class="layer-name">Poly Landmarks</span>
+          </label>
+          <label class="layer-item">
+            <input type="checkbox"
+                   [checked]="layerVisibility['geoserver7']"
+                   (change)="onLayerToggle('geoserver7')">
+            <span class="checkmark"></span>
+            <span class="layer-name">Giant Polygon</span>
+          </label>
+          <label class="layer-item">
+            <input type="checkbox"
+                   [checked]="layerVisibility['geoserver8']"
+                   (change)="onLayerToggle('geoserver8')">
+            <span class="checkmark"></span>
+            <span class="layer-name">Poi</span>
           </label>
         </div>
       </div>
+
+
     </div>
+    <button class="dropdown-toggle" (click)="enableScreenshotMode()" style="margin-left: 10px;">
+      📸 Выделить область и сохранить
+    </button>
+    <button class="dropdown-toggle" (click)="enableAreaMeasurement()" style="margin-left: 10px;">
+      📐 Измерить площадь
+    </button>
+    <button class="dropdown-toggle" (click)="enableMagnifier()" style="margin-left: 10px;">
+      🔍 Лупа
+    </button>
   </div>
 </div>
+<div id="popup" class="ol-popup">
+  <div id="popup-content"></div>
+</div>
+<div #selectionBox class="selection-box" style="display:none;"></div>
 
 <div #mapContainer class="map"></div>
 

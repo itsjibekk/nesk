@@ -7,6 +7,7 @@
   <!-- Add buttons directly to header -->
   <app-buttons
     [isLoggedIn]="isLoggedIn"
+    [userRole]="userRole"
     (loginEvent)="onLoginClicked()"
     (logoutEvent)="onLogoutClicked()"
     (mapsEvent)="onMapsClicked()"
