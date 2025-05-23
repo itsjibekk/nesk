@@ -1,21 +1,78 @@
-<div class="bg-white p-10 rounded-xl shadow-md text-center w-full max-w-2xl">
-  <div class="bg-white border rounded-lg shadow p-6 max-w-md mx-auto text-left flex flex-col items-center space-y-4">
-    <h3 class="text-lg font-semibold mt-4">Новости</h3>
-    <p class="text-gray-600 text-center">Последние обновления и события компании</p>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Дэшборд | Технические Даты и Мощности</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</head>
+<body class="bg-gray-100 p-4 font-sans">
 
-    <!-- Image -->
-    <img
-      src="assets/images/backgroundru1.jpg"
-      alt="News image"
-      class="news-img mb-4  w-50 block"
-    />
+<h1 class="text-2xl font-bold text-center mb-6">Аналитика по объектам энергосети</h1>
 
-    <!-- Button below the image -->
-    <button
-      onclick="window.open('https://nesk.kg/ru/press-centr/novosti-i-press-relizy/', '_blank')"
-      class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-2"
-    >
-      Перейти →
-    </button>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+  <!-- Карточки с датами -->
+  <div class="bg-white p-4 rounded shadow">
+    <h2 class="text-lg font-semibold mb-1">Техническое обслуживание</h2>
+    <p>Дата: <span class="text-blue-600 font-medium">2025-04-15</span></p>
+  </div>
+  <div class="bg-white p-4 rounded shadow">
+    <h2 class="text-lg font-semibold mb-1">Капитальный ремонт</h2>
+    <p>Дата: <span class="text-blue-600 font-medium">2024-12-01</span></p>
+  </div>
+  <div class="bg-white p-4 rounded shadow">
+    <h2 class="text-lg font-semibold mb-1">Аварийно-восстановительные работы</h2>
+    <p>Дата: <span class="text-blue-600 font-medium">2025-01-20</span></p>
+  </div>
+  <div class="bg-white p-4 rounded shadow">
+    <h2 class="text-lg font-semibold mb-1">Реконструкция (увел. мощности)</h2>
+    <p>Дата: <span class="text-blue-600 font-medium">2025-06-10</span></p>
+  </div>
+  <div class="bg-white p-4 rounded shadow">
+    <h2 class="text-lg font-semibold mb-1">Текущая мощность</h2>
+    <p><span class="text-green-600 font-bold text-xl">130 МВт</span></p>
+  </div>
+  <div class="bg-white p-4 rounded shadow">
+    <h2 class="text-lg font-semibold mb-1">Загруженность</h2>
+    <div id="gaugeChart"></div>
   </div>
 </div>
+
+<!-- График мощностей -->
+<div class="bg-white p-6 rounded shadow mb-8">
+  <h2 class="text-xl font-semibold mb-3">Динамика изменения мощности (МВт)</h2>
+  <div id="powerChart"></div>
+</div>
+
+<script>
+  // Gauge для загруженности
+  var gaugeOptions = {
+    chart: { type: 'radialBar', height: 250 },
+    series: [82],
+    labels: ['Загруженность'],
+    colors: ['#00b894'],
+    plotOptions: {
+      radialBar: {
+        hollow: { size: '70%' },
+        dataLabels: {
+          name: { fontSize: '18px' },
+          value: { fontSize: '22px', formatter: val => val + '%' }
+        }
+      }
+    }
+  };
+  new ApexCharts(document.querySelector("#gaugeChart"), gaugeOptions).render();
+
+  // График по мощности
+  var powerChart = {
+    chart: { type: 'line', height: 300 },
+    series: [{ name: 'Мощность (МВт)', data: [110, 120, 125, 130] }],
+    xaxis: {
+      categories: ['2023', '2024', '2025 (до реконст.)', '2025 (после)']
+    }
+  };
+  new ApexCharts(document.querySelector("#powerChart"), powerChart).render();
+</script>
+
+</body>
+</html>

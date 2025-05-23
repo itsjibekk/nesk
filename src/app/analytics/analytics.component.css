@@ -1,0 +1,33 @@
+.dashboard-grid {
+  display: grid;
+  grid-template-areas:
+      'region consumption consumption gauge'
+      'time time pie radar';
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  padding: 24px;
+  background-color: #f8f9fb;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  min-height: 320px;
+}
+
+apx-chart {
+  width: 100%;
+}
+
+.center-text {
+  text-align: center;
+  font-weight: 600;
+  margin-top: 12px;
+  font-size: 16px;
+}

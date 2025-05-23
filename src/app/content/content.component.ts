@@ -8,6 +8,7 @@ import {NgIf} from '@angular/common';
 import {MapsComponent} from '../maps/maps.component';
 import {HeaderComponent} from '../header/header.component';
 import {UsersComponent} from '../users/users.component';
+import {AnalyticsComponent} from '../analytics/analytics.component';
 
 @Component({
   selector: 'app-content',
@@ -19,7 +20,8 @@ import {UsersComponent} from '../users/users.component';
     NgIf,
     MapsComponent,
     HeaderComponent,
-    UsersComponent
+    UsersComponent,
+    AnalyticsComponent
   ],
   templateUrl: './content.component.html',
   standalone: true,
@@ -37,6 +39,15 @@ export class ContentComponent {
     this.componentToShow = componentToShow;
   }
   onLogin(input: any): void{
+    if (!input.login) {
+      console.error("Введите логин");
+      return;
+    }
+    if (!input.password) {
+      console.error("Введите пароль");
+      return;
+    }
+
      this.axiosService.request(
        "POST",
        "/login",
@@ -50,7 +61,11 @@ export class ContentComponent {
        this.componentToShow = "maps";
        const roles = response.data.roles?.map((role: any) => role.name) || [];
        this.userRole = roles.includes('admin') ? 'admin' : 'user';
+     }).catch(error => {
+       this.isLoggedIn = false; // Добавить явную установку на false
+       console.error("Login error:", error.response?.data?.message);
      });
+
   }
 
 

@@ -19,6 +19,7 @@ export class ButtonsComponent {
   @Output() logoutEvent = new EventEmitter();
   @Output() mapsEvent = new EventEmitter(); // Add this
   @Output() manageUsersEvent = new EventEmitter(); // Add this
+  @Output() analyzeEvent = new EventEmitter();
 
 
 
@@ -31,4 +32,7 @@ export class ButtonsComponent {
   }
 
 
+  onAnalyticsClicked() {
+    this.analyzeEvent.emit();
+  }
 }

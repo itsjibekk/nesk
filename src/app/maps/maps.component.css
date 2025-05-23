@@ -58,20 +58,38 @@
   z-index: 9999;
 }
 
-
-/*.ol-dragbox {*/
-/*  border: 2px dashed rgba(0, 153, 255, 0.7);*/
-/*  background-color: rgba(0, 153, 255, 0.2);*/
-/*  position: absolute;*/
-/*  pointer-events: none;*/
-/*  z-index: 1000;*/
-/*}*/
-
 .map-controls {
-  padding: 1rem;
-  background: #f5f5f5;
   border-radius: 8px;
   margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
+  flex-wrap: wrap;
+
+}
+
+.controls-container-left {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.controls-container-right {
+  display: flex;
+  align-items: center;
+  flex: 0.5; /* растягивается */
+  justify-content: flex-end;
+}
+
+.search-input {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  min-width: 240px;
 }
 
 .controls-container {
@@ -130,39 +148,30 @@
   color: #666;
 }
 
-
-/*.ol-popup {*/
-/*  background-color: white;*/
-/*  border-radius: 4px;*/
-/*  padding: 5px 10px;*/
-/*  border: 1px solid #ccc;*/
-/*  font-size: 12px;*/
-/*  box-shadow: 0 1px 4px rgba(0,0,0,0.2);*/
-/*  white-space: nowrap;*/
-/*}*/
 .ol-popup {
   user-select: none;
   position: absolute;
   background-color: white;
   box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-  padding: 10px 15px;
+  padding: 15px 20px;
   border-radius: 12px;
   border: 1px solid #ccc;
-  transform: translate(-50%, -120%);
-  min-width: 200px;
+  transform: translate(-50%, -100%); /* ← ниже */
+  min-width: 400px;                 /* ← шире */
   font-family: Arial, sans-serif;
   z-index: 100000;
 }
 
 .ol-popup h3 {
   margin: 0;
-  font-size: 16px;
+  font-size: 5px;
   font-weight: bold;
 }
 
 .ol-popup p {
-  margin: 4px 0;
-  font-size: 14px;
+  margin: 4px 0;                     /* Уменьшаем отступы между строками */
+  font-size: 6px;                   /* Меньше шрифт */
+  line-height: 1.2;
 }
 
 
@@ -178,6 +187,32 @@
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   min-width: 200px;
   z-index: 1000;
+}
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+.map {
+  flex-grow: 1;
+  width: 100%;
+}
+
+.tool-button {
+  padding: 10px 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #333;
+  font-weight: bold;
+}
+.tool-button:hover {
+  background-color: #666;
 }
 
 .layers-dropdown:hover .dropdown-menu {
@@ -249,4 +284,28 @@ input:checked ~ .checkmark {
 
 input:checked ~ .checkmark:after {
   display: block;
+}
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 6px 12px;
+  width: 100%;
+  box-sizing: border-box;
+  gap: 8px;
+}
+
+.search-icon {
+  font-size: 16px;
+  color: #888;
+}
+
+.search-input {
+  border: none;
+  outline: none;
+  flex-grow: 1;
+  font-size: 14px;
+  width: 100%;
 }

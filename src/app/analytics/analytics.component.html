@@ -1,0 +1,91 @@
+<div class="dashboard-grid">
+  <!-- График потребления энергии по регионам -->
+  <div class="card" style="grid-area: region;">
+    <apx-chart
+      [series]="[{ name: 'Регион A', data: [80, 120, 100, 140, 90] }]"
+      [chart]="{ type: 'bar', height: 250 }"
+      [xaxis]="{ categories: ['Сев.', 'Юг', 'Центр', 'Запад', 'Восток'] }"
+    ></apx-chart>
+    <p class="center-text">График потребления энергии по регионам</p>
+  </div>
+
+  <!-- Динамика энергопотребления по месяцам -->
+  <div class="card" style="grid-area: consumption;">
+    <apx-chart
+      [series]="[{ name: 'Потребление', data: [120, 200, 150, 300, 180, 250, 210] }]"
+      [chart]="{ type: 'line', height: 320 }"
+      [xaxis]="{ categories: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл'] }"
+      [stroke]="{ curve: 'smooth' }"
+      [dataLabels]="{ enabled: false }"
+      [markers]="{ size: 4 }"
+    ></apx-chart>
+    <p class="center-text">Динамика энергопотребления по месяцам</p>
+  </div>
+
+  <!-- Новый дизайн для средней нагрузки -->
+  <div class="card" style="grid-area: gauge;">
+    <apx-chart
+      [series]="[100]"
+      [chart]="{ type: 'radialBar', height: 300 }"
+      [plotOptions]="{
+        radialBar: {
+          startAngle: -135,
+          endAngle: 135,
+          hollow: { size: '70%' },
+          track: { background: '#e7e7e7', strokeWidth: '97%' },
+          dataLabels: {
+            name: { offsetY: -20, show: true, fontSize: '14px' },
+            value: { offsetY: 10, fontSize: '26px', show: true }
+          }
+        }
+      }"
+      [colors]="['#00C851']"
+    [fill]="{
+    type: 'gradient',
+    gradient: {
+    shade: 'light',
+    type: 'horizontal',
+    shadeIntensity: 0.5,
+    gradientToColors: ['#dc6601'],
+    inverseColors: false,
+    opacityFrom: 1,
+    opacityTo: 1,
+    stops: [0, 100]
+    }
+    }"
+    [labels]="['Средняя нагрузка']"
+    ></apx-chart>
+  </div>
+
+
+  <!-- Временной анализ нагрузки -->
+  <div class="card" style="grid-area: time; min-height: 320px;">
+    <apx-chart
+      [series]="[{ name: 'Нагрузка', data: [50, 70, 80, 65, 90, 120, 130, 100, 80, 75, 60, 50] }]"
+      [chart]="{ type: 'bar', height: 250 }"
+      [xaxis]="{ categories: ['1ч', '2ч', '3ч', '4ч', '5ч', '6ч', '7ч', '8ч', '9ч', '10ч', '11ч', '12ч'] }"
+    ></apx-chart>
+    <p class="center-text">Анализ нагрузки по времени</p>
+  </div>
+
+  <!-- Диаграмма потерь -->
+  <div class="card" style="grid-area: pie; min-height: 320px;">
+    <apx-chart
+      [series]="[55, 30, 15]"
+      [chart]="{ type: 'pie', height: 250 }"
+      [labels]="['Технические', 'Коммерческие', 'Прочие']"
+      [legend]="{ position: 'bottom' }"
+    ></apx-chart>
+    <p class="center-text">Потери энергии</p>
+  </div>
+
+  <!-- Радар-график категорий потребления -->
+  <div class="card" style="grid-area: radar;">
+    <apx-chart
+      [series]="[{ name: 'Категории', data: [70, 50, 60, 80, 45] }]"
+      [chart]="{ type: 'radar', height: 250 }"
+      [xaxis]="{ categories: ['Жилые', 'Промышл.', 'Коммунальные', 'Сельхоз', 'Коммерц.'] }"
+    ></apx-chart>
+    <p class="center-text">Категории потребления</p>
+  </div>
+</div>

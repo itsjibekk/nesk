@@ -5,7 +5,6 @@ import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import TileWMS from 'ol/source/TileWMS';
-import {fromLonLat} from 'ol/proj';
 import {DragBox} from 'ol/interaction';
 import Overlay from 'ol/Overlay';
 import DragPan from 'ol/interaction/DragPan';
@@ -13,7 +12,10 @@ import Draw from 'ol/interaction/Draw';
 import {getArea} from 'ol/sphere';
 import VectorSource from 'ol/source/Vector';
 import {Polygon} from 'ol/geom';
-import ol from 'ol/dist/ol';
+import {FormsModule} from "@angular/forms";
+import {XYZ} from 'ol/source';
+import {fromLonLat, toLonLat} from 'ol/proj';
+
 
 
 async function fetchTransformerData(transformerId: string): Promise<any> {
@@ -28,14 +30,14 @@ async function fetchTransformerData(transformerId: string): Promise<any> {
 @Component({
   selector: 'app-maps',
   standalone: true,
-  imports: [CommonModule],
+    imports: [CommonModule, FormsModule],
   templateUrl: './maps.component.html',
   styleUrls: ['./maps.component.css']
 })
 export class MapsComponent implements AfterViewInit, OnDestroy {
   @ViewChild('mapContainer', { static: false }) mapContainerRef!: ElementRef;
   @ViewChild('selectionBox', { static: false }) selectionBoxRef!: ElementRef;
-  private map!: Map;
+  map!: Map;
   private baseLayers: { [key: string]: TileLayer } = {};
   private overlayLayers: TileLayer[] = [];
   private dragBox!: DragBox;
@@ -46,7 +48,9 @@ export class MapsComponent implements AfterViewInit, OnDestroy {
   private magnifierActive = false;
   private magnifierMouseMoveHandler?: (e: MouseEvent) => void;
   private magnifierClickHandler?: () => void;
+  private coordinateModeActive = false;
 
+  searchQuery = '';
 
   selectedMap: string = 'osm';
 
@@ -373,28 +377,28 @@ this.drawInteraction.on('drawend', (event) => {
           crossOrigin: 'anonymous'
         }),
         visible: this.selectedMap === 'osm'
+      }),
+     google: new TileLayer({
+         source: new XYZ({
+          url: 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+          crossOrigin: 'anonymous'
+         }),
+         visible: this.selectedMap === 'google'
+      }),
+       yandex: new TileLayer({
+        source: new XYZ({
+          url: 'https://core-renderer-tiles.maps.yandex.net/tiles?l=map&x={x}&y={y}&z={z}',
+         crossOrigin: 'anonymous'
+         }),
+         visible: this.selectedMap === 'yandex'
+       }),
+       twoGis: new TileLayer({
+      source: new XYZ({
+           url: 'https://core-renderer-tiles.maps.yandex.net/tiles?l=map&x={x}&y={y}&z={z}',
+          crossOrigin: 'anonymous'
+         }),
+        visible: this.selectedMap === '2gis'
       })
-      // google: new TileLayer({
-      //   source: new XYZ({
-      //     url: 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
-      //     crossOrigin: 'anonymous'
-      //   }),
-      //   visible: this.selectedMap === 'google'
-      // }),
-      // yandex: new TileLayer({
-      //   source: new XYZ({
-      //     url: 'https://core-renderer-tiles.maps.yandex.net/tiles?l=map&x={x}&y={y}&z={z}',
-      //     crossOrigin: 'anonymous'
-      //   }),
-      //   visible: this.selectedMap === 'yandex'
-      // }),
-      // twoGis: new TileLayer({
-      //   source: new XYZ({
-      //     url: 'https://core-renderer-tiles.maps.yandex.net/tiles?l=map&x={x}&y={y}&z={z}',
-      //     crossOrigin: 'anonymous'
-      //   }),
-      //   visible: this.selectedMap === '2gis'
-      // })
 
     };
 
@@ -427,7 +431,7 @@ this.drawInteraction.on('drawend', (event) => {
         source: new TileWMS({
           url: 'http://localhost:8081/geoserver/wms',
           params: {
-            'LAYERS': 'topp:states',
+            'LAYERS': 'gis:electric_network_branches',
             'TILED': true
           },
           serverType: 'geoserver',
@@ -439,7 +443,7 @@ this.drawInteraction.on('drawend', (event) => {
         source: new TileWMS({
           url: 'http://localhost:8081/geoserver/wms',
           params: {
-            'LAYERS': 'nurc:Arc_Sample',
+            'LAYERS': 'gis:res_offices',
             'TILED': true
           },
           serverType: 'geoserver',
@@ -528,55 +532,129 @@ this.drawInteraction.on('drawend', (event) => {
     this.popupContent = document.getElementById('popup-content')!;
     this.popupOverlay = new Overlay({
       element: this.popupContainer,
-      positioning: 'center-center', // или 'top-left'
+      positioning: 'bottom-center',
       stopEvent: false,
-      offset: [0, -20] // можно подвинуть чуть выше курсора
+      offset: [0, 0] // раньше было -15 или -20
     });
+
 
     this.map.addOverlay(this.popupOverlay);
 
 
 // Обработчик наведения на объекты
     this.map.on('pointermove', async (evt) => {
+      if (this.coordinateModeActive) {
+        this.popupContainer.style.display = 'none'; // скрываем, если включен режим координат
+        return;
+      }
       const viewResolution = this.map.getView().getResolution();
 
-      const tileWmsSource = this.overlayLayers[0].getSource() as TileWMS;
-      const url = tileWmsSource.getFeatureInfoUrl(
-        evt.coordinate,
-        viewResolution!,
-        'EPSG:3857',
-        { 'INFO_FORMAT': 'application/json' }
-      );
+      const checkLayers = [
+        { index: 2, api: 'http://localhost:8080/api/pes/', type: 'pes' }, // geoserver3
+        { index: 0, api: 'http://localhost:8080/api/transformers/', type: 'transformer' }, // geoserver1
+        { index: 3, api: 'http://localhost:8080/api/res/', type: 'res' } // geoserver4
+      ];
 
-      if (url) {
-        const response = await fetch(url);
-        const data = await response.json();
+      for (const layer of checkLayers) {
+        const source = this.overlayLayers[layer.index].getSource() as TileWMS;
+        const url = source.getFeatureInfoUrl(
+          evt.coordinate,
+          viewResolution!,
+          'EPSG:3857',
+          { INFO_FORMAT: 'application/json' }
+        );
 
-        if (data.features.length > 0) {
-          const featureId = data.features[0].id;
+        if (!url) continue;
 
-          const apiResponse = await fetch(`http://localhost:8080/api/transformers/123/data`);
-          const apiData = apiResponse.ok ? await apiResponse.json() : {
-            temperature: '-', voltage: '-', current: '-', status: 'N/A'
-          };
+        try {
+          const response = await fetch(url);
+          const data = await response.json();
 
-          this.popupContent.innerHTML = `
-        <h3>Transformer ${featureId}</h3>
-        <p>Temperature: ${apiData.temperature} °C</p>
-        <p>Voltage: ${apiData.voltage} V</p>
-        <p>Current: ${apiData.current} A</p>
-        <p>Status: ${apiData.status}</p>
-      `;
-          this.popupOverlay.setPosition(evt.coordinate);
-          this.popupContainer.style.display = 'block';
-        } else {
-          this.popupContainer.style.display = 'none';
+          if (data.features.length > 0) {
+
+            const feature = data.features[0];
+            const rawId = feature.id || feature.properties.id || '';
+            const featureId = rawId.includes('.') ? rawId.split('.').pop() : rawId;
+
+            const apiUrl = `${layer.api}${featureId}${layer.type === 'pes' || 'res' ? '' : '/data'}`;
+            const apiResponse = await fetch(apiUrl);
+            const apiData = apiResponse.ok ? await apiResponse.json() : null;
+
+            if (layer.type === 'transformer' && apiData) {
+              this.popupContent.innerHTML = `
+            <h3>Transformer ${featureId}</h3>
+            <p>Temperature: ${apiData.temperature} °C</p>
+            <p>Voltage: ${apiData.voltage} V</p>
+            <p>Current: ${apiData.current} A</p>
+            <p>Status: ${apiData.status}</p>
+          `;
+            }
+            if (layer.type === 'res' && apiData) {
+              this.popupContent.innerHTML = `
+            <h3>${apiData.name}</h3>
+            <p><strong>Название:</strong> ${apiData.name}</p>
+            <p><strong>Адрес:</strong> ${apiData.address}</p>
+            <p><strong>Телефон:</strong> ${apiData.phone}</p>
+
+          `;
+            }
+            if (layer.type === 'pes' && apiData) {
+              this.popupContent.innerHTML = `
+            <h3>${apiData.name}</h3>
+            <p><strong>Адрес:</strong> ${apiData.address}</p>
+            <p><strong>Телефон:</strong> ${apiData.phone}</p>
+            <p><strong>Email:</strong> ${apiData.email}</p>
+            <p><strong>Сайт:</strong> <a href="${apiData.website}" target="_blank">${apiData.website}</a></p>
+            <p><strong>Регион:</strong> ${apiData.region}</p>
+          `;
+            }
+
+            this.popupOverlay.setPosition(evt.coordinate);
+            this.popupContainer.style.display = 'block';
+            return; // не проверяем дальше, если нашли
+          }
+        } catch (err) {
+          console.error(`Ошибка при получении ${layer.type}:`, err);
         }
-      } else {
-        this.popupContainer.style.display = 'none';
       }
+
+      // если не найдено ни одного объекта
+      this.popupContainer.style.display = 'none';
     });
+
+
   }
+  private clickListener?: (e: any) => void;
+
+  enableCoordinatePicker(): void {
+    if (this.coordinateModeActive) {
+      this.map.un('singleclick', this.clickListener!);
+      this.coordinateModeActive = false;
+      this.clickListener = undefined;
+      return;
+    }
+
+    this.coordinateModeActive = true;
+
+    this.clickListener = (e: any) => {
+      const coordinate = e.coordinate;
+      const [lon, lat] = toLonLat(coordinate);
+
+      this.popupContent.innerHTML = `
+      <p><strong>Долгота:</strong> ${lon.toFixed(6)}</p>
+      <p><strong>Широта:</strong> ${lat.toFixed(6)}</p>
+    `;
+      this.popupOverlay.setPosition(coordinate);
+      this.popupContainer.style.display = 'block';
+
+      this.map.un('singleclick', this.clickListener!);
+      this.coordinateModeActive = false;
+    };
+
+    this.map.on('singleclick', this.clickListener);
+  }
+
+
   onMapSelect(event: any): void {
     this.selectedMap = event.target.value;
     this.updateBaseLayerVisibility();
@@ -639,5 +717,29 @@ this.drawInteraction.on('drawend', (event) => {
 
     this.map.renderSync();
   }
+
+  generateExcelReport(): void {
+    const data = [
+      ['Название', 'Значение'],
+      ['Температура', '22°C'],
+      ['Напряжение', '220V'],
+      ['Ток', '5A'],
+      ['Статус', 'Норма']
+    ];
+
+    const csvRows = data.map(row => row.join(',')).join('\n');
+    const BOM = '\uFEFF'; // UTF-8 BOM символ
+
+    const blob = new Blob([BOM + csvRows], { type: 'text/csv;charset=utf-8;' });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'report.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
 
 }

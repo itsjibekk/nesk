@@ -19,6 +19,7 @@ export class HeaderComponent {
   @Output() logoutEvent = new EventEmitter<void>();
   @Output() mapsEvent = new EventEmitter<void>();
   @Output() manageUsersEvent = new EventEmitter<void>();
+  @Output() analyzeEvent = new EventEmitter<void>();
 
   onLoginClicked() {
     this.loginEvent.emit();
@@ -34,7 +35,8 @@ export class HeaderComponent {
   onManageUsersClicked(){
     this.manageUsersEvent.emit();
   }
-
-
+  onAnalyticsClicked(){
+    this.analyzeEvent.emit();
+  }
 }
 

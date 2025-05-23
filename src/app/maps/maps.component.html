@@ -1,5 +1,5 @@
 <div class="map-controls" xmlns:margin-left="http://www.w3.org/1999/xhtml">
-  <div class="controls-container">
+  <div class="controls-container-left">
     <select class="dropdown-toggle" (change)="onMapSelect($event)">
       <option value="osm">OpenStreetMap</option>
       <option value="google">Google Maps</option>
@@ -10,7 +10,6 @@
     <div class="layers-dropdown">
       <button class="dropdown-toggle">
         <span>🌍 Слои</span>
-        <span class="arrow">▼</span>
       </button>
       <div class="dropdown-menu">
         <div class="layer-list">
@@ -33,14 +32,14 @@
                    [checked]="layerVisibility['geoserver3']"
                    (change)="onLayerToggle('geoserver3')">
             <span class="checkmark"></span>
-            <span class="layer-name">States</span>
+            <span class="layer-name">ПЭСы</span>
           </label>
           <label class="layer-item">
             <input type="checkbox"
                    [checked]="layerVisibility['geoserver4']"
                    (change)="onLayerToggle('geoserver4')">
             <span class="checkmark"></span>
-            <span class="layer-name">Sample Arc</span>
+            <span class="layer-name">РЭСы</span>
           </label>
           <label class="layer-item">
             <input type="checkbox"
@@ -73,17 +72,26 @@
         </div>
       </div>
 
-
     </div>
-    <button class="dropdown-toggle" (click)="enableScreenshotMode()" style="margin-left: 10px;">
-      📸 Выделить область и сохранить
-    </button>
-    <button class="dropdown-toggle" (click)="enableAreaMeasurement()" style="margin-left: 10px;">
-      📐 Измерить площадь
-    </button>
-    <button class="dropdown-toggle" (click)="enableMagnifier()" style="margin-left: 10px;">
-      🔍 Лупа
-    </button>
+
+    <button class="tool-button" (click)="enableScreenshotMode()">📸 Выделить область и сохранить</button>
+    <button class="tool-button" (click)="enableAreaMeasurement()">📐 Измерить площадь</button>
+    <button class="tool-button" (click)="enableMagnifier()">🔍 Лупа</button>
+    <button class="tool-button" (click)="enableCoordinatePicker()">📍 Координаты точки</button>
+    <button class="tool-button" (click)="generateExcelReport()">📊 Отчёт в Excel</button>
+
+
+  </div>
+  <div class="controls-container-right">
+    <div class="search-wrapper">
+      <span class="search-icon">🔍</span>
+      <input
+        [(ngModel)]="searchQuery"
+        type="text"
+        placeholder="Search"
+        class="search-input"
+      />
+    </div>
   </div>
 </div>
 <div id="popup" class="ol-popup">

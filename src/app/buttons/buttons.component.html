@@ -1,13 +1,23 @@
-<div class="d-flex justify-content-center align-items-center mt-3 flex-wrap">
-  <button *ngIf="!isLoggedIn" class="btn btn-primary m-2" (click)="loginEvent.emit()">Login</button>
-  <button *ngIf="isLoggedIn" class="btn btn-primary m-2" (click)="logoutEvent.emit()">Logout</button>
-  <button *ngIf="isLoggedIn" class="btn btn-primary m-2" (click)="showMaps()">Maps</button>
-<!--  <button *ngIf="isLoggedIn" class="btn btn-primary m-2" (click)="onManageUsersClicked()">Manage Users</button>-->
-  <button *ngIf="isLoggedIn && userRole === 'admin'"
-          class="btn btn-primary m-2"
-          (click)="onManageUsersClicked()">
-    Manage Users
-  </button>
+<header class="main-header">
+  <div class="d-flex justify-content-center align-items-center flex-wrap button-group">
+    <button *ngIf="!isLoggedIn" class="btn btn-primary m-2" (click)="loginEvent.emit()">
+      <i class="fas fa-sign-in-alt me-1"></i> Login
+    </button>
 
-</div>
+    <button *ngIf="isLoggedIn" class="btn btn-primary m-2" (click)="logoutEvent.emit()">
+      <i class="fas fa-sign-out-alt me-1"></i> Logout
+    </button>
 
+    <button *ngIf="isLoggedIn" class="btn btn-primary m-2" (click)="showMaps()">
+      <i class="fas fa-map-marked-alt me-1"></i> Maps
+    </button>
+
+    <button *ngIf="isLoggedIn && userRole === 'admin'" class="btn btn-primary m-2" (click)="onManageUsersClicked()">
+      <i class="fas fa-users-cog me-1"></i> Manage Users
+    </button>
+
+    <button *ngIf="isLoggedIn" class="btn btn-primary m-2" (click)="onAnalyticsClicked()">
+      <i class="fas fa-chart-line me-1"></i> Analytics
+    </button>
+  </div>
+</header>

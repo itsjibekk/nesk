@@ -4,7 +4,7 @@ export interface Role {
 }
 
 export interface User {
-  id?: undefined;
+  id?: number;
   login?: string;
   firstName?: string;
   lastName?: string;

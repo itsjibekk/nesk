@@ -5,6 +5,7 @@
   (logoutEvent)="onLogout()"
   (mapsEvent)="showComponent('maps')"
   (manageUsersEvent)="showComponent('users')"
+  (analyzeEvent)="showComponent('analytics')"
 
 />
 <div class="component-container">
@@ -17,4 +18,5 @@
   />
   <app-maps *ngIf="componentToShow === 'maps'" class="component-view" />
   <app-users *ngIf="componentToShow === 'users'" class="component-view"/>
+  <app-analytics *ngIf="componentToShow === 'analytics'" class="component-view"/>
 </div>
